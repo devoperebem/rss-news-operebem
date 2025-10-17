@@ -248,7 +248,7 @@ python api_server.py
 ## 📊 Fontes RSS (11 total)
 
 1. Bloomberg
-2. Dow Jones Markets
+2. The Wall Street Journal
 3. MarketWatch
 4. Yahoo Finance
 5. Investing.com BR

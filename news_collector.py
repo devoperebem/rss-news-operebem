@@ -34,7 +34,7 @@ except ImportError:
 # Lista de feeds RSS financeiros
 RSS_FEEDS = [
     {"url": "https://feeds.bloomberg.com/markets/news.rss", "fonte": "Bloomberg"},
-    {"url": "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain", "fonte": "Dow Jones Markets"},
+    {"url": "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain", "fonte": "The Wall Street Journal"},
     {"url": "https://feeds.content.dowjones.io/public/rss/mw_topstories", "fonte": "MarketWatch"},
     {"url": "https://finance.yahoo.com/news/rssindex", "fonte": "Yahoo Finance"},
     {"url": "https://br.investing.com/rss/news.rss", "fonte": "Investing.com BR"},
