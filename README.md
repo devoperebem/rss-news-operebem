@@ -322,16 +322,36 @@ Se receber erro de CORS no navegador, verifique:
 2. Seu domínio está na lista (ex: `*.operebem.com.br`)
 3. Use wildcards para subdomínios: `*.operebem.com`
 
+**⚠️ IMPORTANTE**: A API **bloqueia requisições diretas** de ferramentas como Postman, cURL, ReqBin, etc. Requisições devem vir de navegadores com header `Origin` válido. Isso é uma camada extra de segurança além da API Key.
+
 ---
 
 ## 🔐 Segurança
 
 - ✅ **API Key** em todos os endpoints (exceto `/health`)
 - ✅ **CORS restrito** por domínio (configurável via `ALLOWED_ORIGINS`)
+- ✅ **Bloqueio de requisições diretas** - Apenas navegadores com `Origin` válido
 - ✅ **Wildcards suportados**: `*.operebem.com` permite todos os subdomínios
 - ✅ **`.env` no `.gitignore`** - Nunca commitar credenciais
 - ✅ **HTTPS obrigatório** em produção
 - ✅ **Validação de entrada** em todos os endpoints
+
+### Como funciona a proteção CORS
+
+A API implementa **duas camadas de segurança**:
+
+1. **Validação de Origem (CORS)**: Bloqueia requisições sem header `Origin` ou com origem não autorizada
+2. **API Key**: Valida a chave de autenticação em todos os endpoints
+
+**Requisições bloqueadas:**
+- ❌ Ferramentas HTTP diretas (Postman, cURL, ReqBin, wget)
+- ❌ Scripts backend sem header `Origin`
+- ❌ Origens não listadas em `ALLOWED_ORIGINS`
+
+**Requisições permitidas:**
+- ✅ Navegadores web de domínios autorizados
+- ✅ Frontend hospedado em `*.operebem.com` ou `*.operebem.com.br`
+- ✅ Endpoint `/health` (sem restrições para monitoramento)
 
 ### Exemplo de Configuração CORS
 

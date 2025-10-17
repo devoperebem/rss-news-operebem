@@ -73,6 +73,45 @@ def is_origin_allowed(origin):
     return False
 
 
+@app.before_request
+def check_origin():
+    """
+    Valida a origem ANTES de processar a requisição.
+    Bloqueia requisições sem origem válida (exceto /health).
+    """
+    # Permitir /health sem validação de origem
+    if request.path == '/health':
+        return None
+    
+    origin = request.headers.get('Origin')
+    
+    # Log de debug
+    print(f"🔍 Requisição recebida: {request.method} {request.path}")
+    print(f"   Origin: {origin or 'NENHUMA'}")
+    print(f"   User-Agent: {request.headers.get('User-Agent', 'N/A')}")
+    
+    # Se não tiver origem (requisições diretas de ferramentas como Postman, cURL, ReqBin)
+    if not origin:
+        print(f"❌ BLOQUEADO: Requisição sem header Origin")
+        return jsonify({
+            'success': False,
+            'error': 'Acesso negado: Requisições devem ser feitas através de um navegador com origem válida',
+            'code': 'CORS_NO_ORIGIN'
+        }), 403
+    
+    # Verificar se a origem é permitida
+    if not is_origin_allowed(origin):
+        print(f"❌ BLOQUEADO: Origem '{origin}' não está na lista permitida")
+        return jsonify({
+            'success': False,
+            'error': f'Acesso negado: Origem {origin} não autorizada',
+            'code': 'CORS_ORIGIN_DENIED'
+        }), 403
+    
+    print(f"✅ PERMITIDO: Origem '{origin}' autorizada")
+    return None
+
+
 @app.after_request
 def add_cors_headers(response):
     """
