@@ -12,9 +12,10 @@ API REST de notícias financeiras com coleta automática, tradução inteligente
 
 ## 🎯 Funcionalidades
 
-- ✅ **11 fontes RSS** (Bloomberg, Yahoo Finance, CNBC, InfoMoney, etc)
+- ✅ **11 fontes RSS** (Bloomberg, The Wall Street Journal, CNBC, InfoMoney, etc)
 - ✅ **Tradução automática** para português com detecção de idioma
 - ✅ **API REST segura** com autenticação via API Key
+- ✅ **CORS configurável** - Restringe acesso por domínio
 - ✅ **Zero duplicação** (constraint UNIQUE no banco)
 - ✅ **Coleta 24/7** a cada 30 segundos
 - ✅ **Limpeza automática** de notícias antigas (>24h)
@@ -177,6 +178,7 @@ No dashboard Railway, vá em **Variables** e adicione:
 
 ```env
 API_KEY=<gerar-chave-forte>
+ALLOWED_ORIGINS=*.operebem.com,*.operebem.com.br
 DEBUG=False
 ```
 
@@ -184,6 +186,11 @@ DEBUG=False
 ```bash
 python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
+
+**Configuração de CORS (ALLOWED_ORIGINS)**:
+- `*.operebem.com,*.operebem.com.br` - Permite todos os subdomínios Operebem
+- `https://terminal.operebem.com.br` - Permite apenas domínio específico
+- `*` - Permite todas as origens (NÃO recomendado em produção)
 
 ### 4. Testar
 
@@ -285,6 +292,7 @@ Variáveis de ambiente (`.env` ou Railway Variables):
 | Variável | Padrão | Descrição |
 |----------|--------|-----------|
 | `API_KEY` | `dev-key-12345` | Chave de autenticação |
+| `ALLOWED_ORIGINS` | `*` | Origens permitidas (CORS) |
 | `DEBUG` | `False` | Modo debug |
 | `REFRESH_INTERVAL` | `30` | Segundos entre coletas |
 | `MAX_AGE_HOURS` | `24` | Retenção de notícias |
@@ -307,21 +315,36 @@ Verifique se a chave nas Variables da Railway está correta.
 
 Aguarde 30s para primeira coleta. Veja logs: Railway Dashboard → Deployments → View Logs.
 
----
+### CORS bloqueado
 
-## 📚 Documentação Adicional
-
-- 📘 **DOCUMENTATION.md** - Documentação técnica completa
-- 📝 **OTIMIZACOES.md** - Otimizações implementadas
+Se receber erro de CORS no navegador, verifique:
+1. `ALLOWED_ORIGINS` está configurado no Railway
+2. Seu domínio está na lista (ex: `*.operebem.com.br`)
+3. Use wildcards para subdomínios: `*.operebem.com`
 
 ---
 
 ## 🔐 Segurança
 
-- ✅ API Key em todos os endpoints (exceto `/health`)
-- ✅ `.env` no `.gitignore`
-- ✅ HTTPS obrigatório em produção
-- ✅ Validação de entrada
+- ✅ **API Key** em todos os endpoints (exceto `/health`)
+- ✅ **CORS restrito** por domínio (configurável via `ALLOWED_ORIGINS`)
+- ✅ **Wildcards suportados**: `*.operebem.com` permite todos os subdomínios
+- ✅ **`.env` no `.gitignore`** - Nunca commitar credenciais
+- ✅ **HTTPS obrigatório** em produção
+- ✅ **Validação de entrada** em todos os endpoints
+
+### Exemplo de Configuração CORS
+
+```env
+# Permite apenas domínios Operebem
+ALLOWED_ORIGINS=*.operebem.com,*.operebem.com.br
+
+# Permite domínios específicos
+ALLOWED_ORIGINS=https://terminal.operebem.com.br,https://group.operebem.com.br
+
+# Desenvolvimento local + produção
+ALLOWED_ORIGINS=http://localhost:3000,*.operebem.com.br
+```
 
 ---
 

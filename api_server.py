@@ -5,20 +5,22 @@ API REST para servir notícias financeiras do banco SQLite
 Servidor Flask com CORS e autenticação via API Key
 """
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 import sqlite3
 from datetime import datetime
 from typing import List, Dict
 from functools import wraps
 import os
+import re
 from dotenv import load_dotenv
 
 # Carregar variáveis de ambiente
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)  # Habilitar CORS para permitir requisições do frontend
+
+# Configuração de CORS será feita via middleware customizado
 
 # Importar configurações
 try:
@@ -29,6 +31,68 @@ except ImportError:
     API_KEY = os.getenv('API_KEY', 'dev-key-12345')
     PORT = int(os.getenv('PORT', 5000))
     DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
+
+# Configuração de origens permitidas (CORS)
+ALLOWED_ORIGINS = os.getenv('ALLOWED_ORIGINS', '*').split(',')
+ALLOWED_ORIGINS = [origin.strip() for origin in ALLOWED_ORIGINS]
+
+
+def is_origin_allowed(origin):
+    """
+    Verifica se a origem é permitida.
+    Suporta wildcards (*.operebem.com) e domínios exatos.
+    """
+    if not origin:
+        return False
+    
+    # Se permitir todas as origens
+    if '*' in ALLOWED_ORIGINS:
+        return True
+    
+    # Verificar domínios exatos
+    if origin in ALLOWED_ORIGINS:
+        return True
+    
+    # Verificar wildcards
+    for allowed in ALLOWED_ORIGINS:
+        if '*' in allowed:
+            # Converter wildcard para regex
+            # *.operebem.com -> ^https?://.*\.operebem\.com$
+            pattern = allowed.replace('.', '\\.').replace('*', '.*')
+            # Adicionar protocolo se não tiver
+            if not pattern.startswith('http'):
+                pattern = f'^https?://{pattern}$'
+            else:
+                pattern = f'^{pattern}$'
+            
+            if re.match(pattern, origin, re.IGNORECASE):
+                return True
+    
+    return False
+
+
+@app.after_request
+def add_cors_headers(response):
+    """
+    Adiciona headers CORS customizados baseado nas origens permitidas.
+    """
+    origin = request.headers.get('Origin')
+    
+    if is_origin_allowed(origin):
+        response.headers['Access-Control-Allow-Origin'] = origin
+        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, X-API-Key'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
+    
+    return response
+
+
+@app.route('/api/<path:path>', methods=['OPTIONS'])
+def handle_options(path):
+    """
+    Responde a requisições OPTIONS (preflight CORS).
+    """
+    return '', 204
 
 
 def get_db_connection():
