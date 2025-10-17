@@ -6,7 +6,6 @@ Servidor Flask com CORS e autenticação via API Key
 """
 
 from flask import Flask, jsonify, request, make_response
-from flask_cors import CORS
 import sqlite3
 from datetime import datetime
 from typing import List, Dict
@@ -35,6 +34,9 @@ except ImportError:
 # Configuração de origens permitidas (CORS)
 ALLOWED_ORIGINS = os.getenv('ALLOWED_ORIGINS', '*').split(',')
 ALLOWED_ORIGINS = [origin.strip() for origin in ALLOWED_ORIGINS]
+
+# Log de configuração CORS
+print(f"🔒 CORS configurado com origens permitidas: {ALLOWED_ORIGINS}")
 
 
 def is_origin_allowed(origin):
