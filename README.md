@@ -12,7 +12,7 @@ API REST de notícias financeiras com coleta automática, tradução inteligente
 
 ## 🎯 Funcionalidades
 
-- ✅ **11 fontes RSS** (Bloomberg, The Wall Street Journal, CNBC, InfoMoney, etc)
+- ✅ **13 fontes RSS** (Bloomberg, WSJ, Banco Central, CoinDesk, InfoMoney, etc)
 - ✅ **Tradução automática** para português com detecção de idioma
 - ✅ **API REST segura** com autenticação via API Key
 - ✅ **CORS configurável** - Restringe acesso por domínio
@@ -252,19 +252,26 @@ python api_server.py
 
 ---
 
-## 📊 Fontes RSS (11 total)
+## 📊 Fontes RSS (13 total)
 
-1. Bloomberg
-2. The Wall Street Journal
-3. MarketWatch
-4. Yahoo Finance
-5. Investing.com BR
-6. OilPrice
-7. Financial Times
-8. CNBC
-9. BNY Mellon
-10. InfoMoney
-11. Money Times
+### Internacionais
+1. **Bloomberg** - Notícias de mercados globais
+2. **The Wall Street Journal** - Análises financeiras
+3. **Yahoo Finance** - Mercado de ações
+4. **OilPrice** - Commodities e energia
+5. **Financial Times** - Economia global
+6. **CNBC** - Notícias financeiras em tempo real
+7. **CoinDesk** - Criptomoedas e blockchain
+
+### Brasil
+8. **Banco Central - Notícias** (ano dinâmico)
+9. **Banco Central - Comunicados** (ano dinâmico)
+10. **Banco Central - Notas à Imprensa** (ano dinâmico)
+11. **Investing.com BR** - Mercado brasileiro
+12. **InfoMoney** - Finanças e investimentos
+13. **Money Times** - Economia e negócios
+
+> **Nota**: Os feeds do Banco Central usam o ano atual automaticamente (ex: 2025)
 
 ---
 

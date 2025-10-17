@@ -32,18 +32,23 @@ except ImportError:
 # ==================== CONFIGURAÇÕES ====================
 
 # Lista de feeds RSS financeiros
+# Nota: URLs do Banco Central usam ano dinâmico (atualizado automaticamente)
 RSS_FEEDS = [
     {"url": "https://feeds.bloomberg.com/markets/news.rss", "fonte": "Bloomberg"},
     {"url": "https://feeds.content.dowjones.io/public/rss/RSSMarketsMain", "fonte": "The Wall Street Journal"},
-    {"url": "https://feeds.content.dowjones.io/public/rss/mw_topstories", "fonte": "MarketWatch"},
     {"url": "https://finance.yahoo.com/news/rssindex", "fonte": "Yahoo Finance"},
     {"url": "https://br.investing.com/rss/news.rss", "fonte": "Investing.com BR"},
     {"url": "https://oilprice.com/rss/main", "fonte": "OilPrice"},
     {"url": "https://www.ft.com/rss/home/uk", "fonte": "Financial Times"},
     {"url": "https://www.cnbc.com/id/100003114/device/rss/rss.html", "fonte": "CNBC"},
-    {"url": "https://www.bny.com/bin/bnymellon/rssFeedGeneratorServlet.report?categoryType=Markets", "fonte": "BNY Mellon"},
     {"url": "https://www.infomoney.com.br/feed/", "fonte": "InfoMoney"},
     {"url": "https://www.moneytimes.com.br/feed/", "fonte": "Money Times"},
+    # Banco Central do Brasil (ano dinâmico)
+    {"url": f"https://www.bcb.gov.br/api/feed/sitebcb/sitefeeds/noticias?ano={datetime.now().year}", "fonte": "Banco Central - Notícias"},
+    {"url": f"https://www.bcb.gov.br/api/feed/app/demaisnormativos/atosecomunicados?ano={datetime.now().year}", "fonte": "Banco Central - Comunicados"},
+    {"url": f"https://www.bcb.gov.br/api/feed/sitebcb/sitefeeds/notasImprensa?ano={datetime.now().year}", "fonte": "Banco Central - Notas à Imprensa"},
+    # Criptomoedas
+    {"url": "https://www.coindesk.com/arc/outboundfeeds/rss/", "fonte": "CoinDesk"},
 ]
 
 
